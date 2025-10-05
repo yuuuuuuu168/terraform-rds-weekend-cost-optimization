@@ -1,0 +1,105 @@
+# ============================================
+# プロジェクト設定
+# ============================================
+# プロジェクト名（リソース名のプレフィックスとして使用されます）
+project_name = "myapp"
+
+# 環境名（development, staging, production等）
+environment = "development"
+
+# AWSリージョン
+aws_region = "ap-northeast-1"
+
+# ============================================
+# VPC設定
+# ============================================
+# VPCのCIDRブロック
+vpc_cidr = "10.0.0.0/16"
+
+# プライベートサブネットのCIDRブロックリスト（2つのAZに配置）
+private_subnet_cidrs = ["10.0.1.0/24", "10.0.2.0/24"]
+
+# 使用するアベイラビリティゾーン
+availability_zones = ["ap-northeast-1a", "ap-northeast-1c"]
+
+# Auroraへのアクセスを許可するCIDRブロック
+# デフォルトではVPC内からのみアクセス可能
+allowed_cidr_blocks = ["10.0.0.0/16"]
+
+# データベースポート
+# MySQL: 3306, PostgreSQL: 5432
+database_port = 3306
+
+# ============================================
+# Aurora Serverless V2設定
+# ============================================
+# Auroraクラスターの識別子（一意である必要があります）
+cluster_identifier = "myapp-dev-aurora"
+
+# データベースエンジン
+# 選択肢: "aurora-mysql" または "aurora-postgresql"
+engine = "aurora-mysql"
+
+# エンジンバージョン
+# MySQL: "8.0.mysql_aurora.3.04.0" 以降
+# PostgreSQL: "15.2" 以降
+engine_version = "8.0.mysql_aurora.3.08.2"
+
+# 初期データベース名
+database_name = "myappdb"
+
+# マスターユーザー名
+# 注意: 本番環境では環境変数（TF_VAR_master_username）の使用を推奨
+master_username = "admin"
+
+# マスターパスワード
+# 重要: このパスワードは必ず変更してください！
+# 注意: 本番環境では環境変数（TF_VAR_master_password）またはAWS Secrets Managerの使用を推奨
+# 要件: 8文字以上、英数字と記号を含む
+master_password = "ChangeMe123!"
+
+# ============================================
+# スケーリング設定
+# ============================================
+# 最小ACU（Aurora Capacity Units）
+# 0に設定することで、利用がない時のコストを0にできます
+# 注意: 初回アクセス時に数秒のスケールアップ時間が発生します
+min_capacity = 0
+
+# 最大ACU
+# 4 = db.m5d.large相当（2vCPU、8GBメモリ）
+# 負荷に応じて自動的にスケールアップします
+max_capacity = 4
+
+# ============================================
+# バックアップ設定
+# ============================================
+# バックアップ保持期間（日）
+# 開発環境: 1日、本番環境: 7-35日を推奨
+backup_retention_period = 1
+
+# バックアップウィンドウ（UTC）
+# 例: "17:00-18:00" = JST 02:00-03:00
+preferred_backup_window = "17:00-18:00"
+
+# メンテナンスウィンドウ（UTC）
+# 例: "sun:18:00-sun:19:00" = JST 日曜 03:00-04:00
+preferred_maintenance_window = "sun:18:00-sun:19:00"
+
+# ============================================
+# セキュリティ設定
+# ============================================
+# 削除保護
+# 開発環境: false、本番環境: true を推奨
+deletion_protection = false
+
+# 最終スナップショットのスキップ
+# 開発環境: true、本番環境: false を推奨
+skip_final_snapshot = true
+
+# ============================================
+# インスタンス設定
+# ============================================
+# Auroraインスタンス数
+# 開発環境: 1、本番環境: 2以上を推奨（高可用性）
+instance_count = 1

@@ -1,0 +1,127 @@
+# ============================================
+# プロジェクト設定
+# ============================================
+# プロジェクト名（リソース名のプレフィックスとして使用されます）
+project_name = "myapp"
+
+# 環境名（development, staging, production等）
+environment = "development"
+
+# AWSリージョン
+aws_region = "ap-northeast-1"
+
+# ============================================
+# VPC設定
+# ============================================
+# VPCのCIDRブロック
+vpc_cidr = "10.0.0.0/16"
+
+# プライベートサブネットのCIDRブロック（2つのAZに配置）
+private_subnet_cidrs = ["10.0.1.0/24", "10.0.2.0/24"]
+
+# 使用するアベイラビリティゾーン
+availability_zones = ["ap-northeast-1a", "ap-northeast-1c"]
+
+# RDSへのアクセスを許可するCIDRブロック（VPC内からのアクセスのみ）
+allowed_cidr_blocks = ["10.0.0.0/16"]
+
+# ============================================
+# RDS設定
+# ============================================
+# RDSインスタンスの識別子（一意である必要があります）
+rds_identifier = "myapp-dev-db"
+
+# データベースエンジン（mysql または postgres）
+rds_engine = "mysql"
+
+# エンジンバージョン
+# MySQL: 8.0.35, 8.0.36等
+# PostgreSQL: 15.4, 15.5等
+rds_engine_version = "8.0.35"
+
+# インスタンスクラス（コスト最適化のためdb.t3.microを推奨）
+# 他のオプション: db.t3.small, db.t3.medium等
+rds_instance_class = "db.t3.micro"
+
+# 割り当てストレージ（GB）
+rds_allocated_storage = 20
+
+# ストレージタイプ（gp3を推奨）
+rds_storage_type = "gp3"
+
+# 初期データベース名
+rds_db_name = "myappdb"
+
+# マスターユーザー名
+# 注意: 'admin'はPostgreSQLでは予約語のため使用できません
+rds_username = "admin"
+
+# マスターパスワード
+# 重要: 本番環境では必ず変更してください
+# 推奨: 環境変数（TF_VAR_rds_password）またはAWS Secrets Managerを使用
+rds_password = "ChangeMe123!"
+
+# バックアップ保持期間（日）
+# 開発環境では1日、本番環境では7日以上を推奨
+rds_backup_retention_period = 1
+
+# バックアップウィンドウ（UTC）
+# JST 02:00-03:00 = UTC 17:00-18:00
+rds_backup_window = "17:00-18:00"
+
+# メンテナンスウィンドウ（UTC）
+# JST 日曜 03:00-04:00 = UTC 日曜 18:00-19:00
+rds_maintenance_window = "sun:18:00-sun:19:00"
+
+# マルチAZ構成（開発環境ではfalse、本番環境ではtrueを推奨）
+rds_multi_az = false
+
+# パブリックアクセス（セキュリティのため常にfalseを推奨）
+rds_publicly_accessible = false
+
+# 削除保護（本番環境ではtrueを推奨）
+rds_deletion_protection = false
+
+# 最終スナップショットのスキップ（開発環境ではtrue、本番環境ではfalseを推奨）
+rds_skip_final_snapshot = true
+
+# ============================================
+# スケジュール設定
+# ============================================
+# 停止スケジュール（cron形式、UTC）
+# デフォルト: JST 土曜 00:00 = UTC 金曜 15:00
+# 注意: EventBridge Schedulerのcron形式は標準のcronと異なります
+# フォーマット: cron(分 時 日 月 曜日 年)
+# 例: 金曜日の20:00 JST (11:00 UTC) = "cron(0 11 ? * FRI *)"
+stop_schedule = "cron(0 15 ? * FRI *)"
+
+# 起動スケジュール（cron形式、UTC）
+# デフォルト: JST 月曜 00:00 = UTC 日曜 15:00
+# 例: 月曜日の07:00 JST (22:00 UTC 日曜) = "cron(0 22 ? * SUN *)"
+start_schedule = "cron(0 15 ? * SUN *)"
+
+# タイムゾーン（スケジュール表示用）
+timezone = "Asia/Tokyo"
+
+# ============================================
+# 使用方法
+# ============================================
+# 1. このファイルを terraform.tfvars にコピー
+#    cp terraform.tfvars.example terraform.tfvars
+#
+# 2. 必要な値を編集（特にパスワードは必ず変更）
+#
+# 3. Terraformを初期化
+#    terraform init
+#
+# 4. プランを確認
+#    terraform plan
+#
+# 5. リソースを作成
+#    terraform apply
+#
+# 注意事項:
+# - terraform.tfvarsファイルは.gitignoreに追加されています
+# - パスワードは平文で保存されるため、本番環境では環境変数を使用してください
+#   例: export TF_VAR_rds_password="your-secure-password"
+# - RDSは停止後7日間で自動的に起動されます
